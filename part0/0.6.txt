@@ -1,0 +1,13 @@
+participant browser
+participant server
+participant user
+
+user adds new note and click the save button ->> event handler prevent default form's submit behavior 
+event handler create new note ->> push new note to the array which stores current list
+event handler renders the new list on the page ->> send the new note to the server: POST https://studies.cs.helsinki.fi/exampleapp/new-note
+
+server receives the note and save it to database
+server ->> browser: success status- 201 created
+
+
+
