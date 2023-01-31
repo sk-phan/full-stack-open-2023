@@ -1,6 +1,6 @@
-const Item = ({ name, number }) => {
+const Item = ({ id, name, number, deleteItem }) => {
     return (
-        <li>{ name } {number}</li>
+        <li>{ name } {number} <button onClick={() => deleteItem(id)}>Delete</button></li>
     )
 }
 
