@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './PersonForm'
 import Error from './components/Error'
+
 import personService from "./service";
 
 const App = () => {
@@ -12,7 +13,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [feedbackMessage, setfeedbackMessage] = useState('')
   const [error, setError] = useState(false);
-  const [show, setShowError] = useState(false);
+  const [showFeedback, setshowFeedback] = useState(false);
 
   useEffect(() => {
     getPersons()
@@ -24,7 +25,9 @@ const App = () => {
     .getAll()
     .then(res => {
       if (res.data) {
+     
         setPersons(res.data)
+     
       }
     })
     .catch(error => console.log(error))
@@ -32,7 +35,9 @@ const App = () => {
 
   //Submit form
   const onSubmit = (e) => {
+    
     e.preventDefault();
+    
     let validatePerson = persons.find(item => item.name === newName);
     
     if (validatePerson) {
@@ -46,20 +51,31 @@ const App = () => {
         .update( validatePerson.id, validatePerson )
         .then(res => {
           if (res.data) {
+
             getPersons()
+
             setfeedbackMessage(`Updated ${validatePerson.name}'s phone number succesfully`)
-            setShowError(true)
-            setTimeout(() => setShowError(false), 3000)
+           
+            setshowFeedback(true)
+           
+            setTimeout(() => setshowFeedback(false), 3000)
           }
         })
         .catch(error => {
           console.log(error)
+
           setfeedbackMessage(`Information of ${validatePerson.name} has already removed from the server`)
+          
           setError(true)
-          setShowError(true)
+          
+          setshowFeedback(true)
+          
           setTimeout(() => {
-            setShowError(false)
+            
+            setshowFeedback(false)
+            
             setError(false)
+         
           }, 3000)
         })
       }
@@ -71,10 +87,14 @@ const App = () => {
       .create(newPerson)
       .then(res => {
         if (res.data) {}
+          
           getPersons()
+          
           setfeedbackMessage(`Added ${newPerson.name}`)
-          setShowError(true)
-          setTimeout(() => setShowError(false), 3000)
+          
+          setshowFeedback(true)
+          
+          setTimeout(() => setshowFeedback(false), 3000)
       })
       .catch(error => console.log(error))
       
@@ -92,7 +112,9 @@ const App = () => {
       .delete(id)
       .then(res => {
         if (res.status === 200) {
+       
           getPersons()
+       
         }
       })
       .catch(error => console.log(error))
@@ -101,14 +123,16 @@ const App = () => {
 
   //Filter list
   const filterList = () => {
+   
     const list = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()));
+   
     return list
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      { showError && <Error message = { feedbackMessage } error= { error } />}
+      { showFeedback && <Error message = { feedbackMessage } error= { error } />}
       <Filter filter={filter} setFilter={setFilter} />
       <PersonForm 
         onSubmit = { onSubmit } 
