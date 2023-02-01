@@ -1,4 +1,6 @@
-const Country = ({ country }) => {
+
+
+const Country = ({ country, weather }) => {
 
     const languages = Object.values(country.languages)
 
@@ -16,6 +18,8 @@ const Country = ({ country }) => {
                 })}
             </ul>
             <span className="flag"> {country.flag} </span>
+            <h2> Weather in {country.capital} </h2>
+            <span> Tempurature  </span>
         </div>
     )
 }   

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import Countries from './components/Countries';
 import Country from './components/Country';
 import Form from './components/Form';
-import api from "./utils/API_URLS"
+
+import api from "./utils/API_URLS";
+import {getWeather} from "./utils/weather_API";
 
 const App = () => {
   const [countries, setCountries] = useState([])
@@ -10,6 +12,7 @@ const App = () => {
   const [newSearch, setNewSearch] = useState('')
   const [showCountry, setShowCountry] = useState(false)
   const [currentCountry, setCurrentCountry] = useState(null);
+  const [weather, setWeather] = useState(null)
 
   useEffect(() => {
     if (countries.length === 0) {
@@ -42,9 +45,20 @@ const App = () => {
 
   const validateResult = result.length >= 1 && result.length <= 10
 
+  const getWeatherData = (lat, lang) => {
+    getWeather(lat, lang)
+    .then(res => {
+      const list = res.data.list
+      console.log(list[list.length - 1])
+      setWeather(list[list.length - 1])
+    })
+    .catch(error => console.log(error))
+  }
+
   const selectCountry = (country) => {
-      setShowCountry(true)
-      setCurrentCountry(country)
+    setShowCountry(true)
+    setCurrentCountry(country)
+    getWeatherData(country.latlng[0], country.latlng[1])
   }
   return (
     <div>
@@ -73,11 +87,17 @@ const App = () => {
         }
         {
           result.length === 1 && 
-          <Country country={result[0]} />
+          <Country 
+            country={result[0]}
+            weather={weather} 
+             />
         }
         {
           showCountry && 
-          <Country country={currentCountry} />
+          <Country 
+            country={currentCountry}
+            weather={weather} 
+           />
         }
     </div>
   );
