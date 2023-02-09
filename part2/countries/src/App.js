@@ -13,7 +13,7 @@ const App = () => {
   const [showCountry, setShowCountry] = useState(false)
   const [currentCountry, setCurrentCountry] = useState(null);
   const [weather, setWeather] = useState(null)
-
+  
   useEffect(() => {
     if (countries.length === 0) {
       getCountries()
@@ -23,7 +23,7 @@ const App = () => {
   useEffect(() => {
     if (newSearch === '') {
       setResult([])
-      setShowCountry(false)
+     // setShowCountry(false)
     }
     else searchCountries()
   }, [newSearch])
@@ -43,13 +43,12 @@ const App = () => {
     setResult(res)
   }
 
-  const validateResult = result.length >= 1 && result.length <= 10
+  const validateResult = result.length > 1 && result.length <= 10
 
   const getWeatherData = (lat, lang) => {
     getWeather(lat, lang)
     .then(res => {
       const list = res.data.list
-      console.log(list[list.length - 1])
       setWeather(list[list.length - 1])
     })
     .catch(error => console.log(error))
@@ -57,8 +56,8 @@ const App = () => {
 
   const selectCountry = (country) => {
     setShowCountry(true)
-    setCurrentCountry(country)
     getWeatherData(country.latlng[0], country.latlng[1])
+    setCurrentCountry(country)
   }
   return (
     <div>
@@ -89,15 +88,16 @@ const App = () => {
           result.length === 1 && 
           <Country 
             country={result[0]}
-            weather={weather} 
-             />
+            weather= {weather}
+            />
         }
         {
-          showCountry && 
+          weather ?
           <Country 
             country={currentCountry}
-            weather={weather} 
+            weather= {weather}
            />
+           : <p>Loading</p>
         }
     </div>
   );

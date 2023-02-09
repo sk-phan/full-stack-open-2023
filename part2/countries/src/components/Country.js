@@ -1,9 +1,9 @@
 
-
 const Country = ({ country, weather }) => {
+    
 
     const languages = Object.values(country.languages)
-
+    
     return (
         <div> 
             <h1> { country.name.common } </h1>
@@ -19,7 +19,17 @@ const Country = ({ country, weather }) => {
             </ul>
             <span className="flag"> {country.flag} </span>
             <h2> Weather in {country.capital} </h2>
-            <span> Tempurature  </span>
+            { weather &&
+             <div> 
+                 <p>
+                    {weather.weather[0].icon}
+                 Tempurature
+                 <span> { weather.main.temp } </span>
+                 </p>
+                 <span> wind { weather.wind.speed } m/s </span>
+                <img width='200px' src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`} alt="icon" />
+            </div> 
+            }
         </div>
     )
 }   
