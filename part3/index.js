@@ -1,8 +1,21 @@
 const { response } = require('express');
 const express = require('express');
+const morgan = require('morgan')
 const app = express();
 
-let phonebook = [
+app.use(express.json()) 
+
+morgan.token('postData', (request) => {
+    if (request.method == 'POST') return ' ' + JSON.stringify(request.body);
+    else return ' ';
+  });
+
+app.use(
+    morgan(
+      ':method :url :status :res[content-length] - :response-time ms :postData'
+    )
+  );
+  let phonebook = [
     {
         "id": 1,
         "name": "Arto Hellas", 
@@ -33,10 +46,16 @@ app.get('/info', (request, response) => {
     const amount = phonebook.length
     response.send(`
         Phonebook has info for ${amount} people 
-        ${new Date()}
+        $
+        {new Date()}
     `)
-}) 
+})
 
+app.post('/test', (req, res) => {
+    res.json({requestBody: req.body})  // <==== req.body will be a parsed JSON object
+  })
+
+  
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`) 
