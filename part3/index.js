@@ -1,15 +1,19 @@
 const { response } = require('express');
 const express = require('express');
-const morgan = require('morgan')
+const morgan = require('morgan');
 const app = express();
+const cors = require('cors');
 
-app.use(express.json()) 
+app.use(express.json());
+app.use(cors()) 
 
+//Create custom token and log POST request
 morgan.token('postData', (request) => {
-    if (request.method == 'POST') return ' ' + JSON.stringify(request.body);
+    if (request.method == 'POST') return  JSON.stringify(request.body);
     else return ' ';
   });
 
+//
 app.use(
     morgan(
       ':method :url :status :res[content-length] - :response-time ms :postData'
@@ -51,12 +55,13 @@ app.get('/info', (request, response) => {
     `)
 })
 
-app.post('/test', (req, res) => {
+//POST REQUEST
+app.post('/persons', (req, res) => {
     res.json({requestBody: req.body})  // <==== req.body will be a parsed JSON object
   })
 
-  
-const PORT = 3001
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`) 
 })
