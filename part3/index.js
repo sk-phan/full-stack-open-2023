@@ -5,15 +5,16 @@ const app = express();
 const cors = require('cors');
 
 app.use(express.json());
+app.use(express.static('build'))
 app.use(cors()) 
 
 //Create custom token and log POST request
-morgan.token('postData', (request) => {
-    if (request.method == 'POST') return  JSON.stringify(request.body);
+morgan.token('postData', (req) => {
+    if (req.method == 'POST') return '' +  JSON.stringify(req.body);
     else return ' ';
   });
 
-//
+
 app.use(
     morgan(
       ':method :url :status :res[content-length] - :response-time ms :postData'
@@ -42,22 +43,61 @@ app.use(
     }
 ] 
 
-app.get('/persons', (request, response) => {
-    response.json(phonebook)
+app.get('/persons', (req, res) => {
+    res.json(phonebook)
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (req, res) => {
     const amount = phonebook.length
-    response.send(`
-        Phonebook has info for ${amount} people 
-        $
-        {new Date()}
-    `)
+    res.json({
+        response: `Phonebook has info for ${amount} people ${new Date()}`  
+    })
 })
 
+app.get('/person/:id', (req,res) => {
+    const id = req.params.id
+    const person = phonebook.find(person => person.id === +id);
+    if (person) {
+        res.json(person)
+    }
+    else {
+        res.status(404).end()
+    }
+})
+
+app.delete('/person/:id', (req, res) => {
+    const id = req.params.id
+    phonebook = phonebook.filter(person => person.id !== +id);
+    res.status(204).end()
+})
 //POST REQUEST
-app.post('/persons', (req, res) => {
-    res.json({requestBody: req.body})  // <==== req.body will be a parsed JSON object
+app.post('/persons', async (req, res) => {
+    const name = await req.body.name
+    const number = req.body.number
+
+    const validName = phonebook.find(person => person.name == name)
+
+    if (validName) {
+       res.status(404).json(
+            {
+                error: 'name must be unique'
+            }
+       ).end()
+    }
+    else if ( !name || !number ) {
+        res.status(404).json(
+            {
+                error: 'missing name or number'
+            }
+       ).end()
+    }
+    else {
+        const newPerson = {
+            ...req.body,
+            id: Math.floor(Math.random() * 100000)
+        }
+        res.json(newPerson)
+    }
   })
 
 
@@ -65,5 +105,3 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`) 
 })
-
-//link https://fragrant-snow-8776.fly.dev/info
