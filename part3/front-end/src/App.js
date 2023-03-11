@@ -87,11 +87,9 @@ const App = () => {
       .create(newPerson)
       .then(res => {
         if (res.data) {}
-          
-       //   getPersons()
+                    
+          setPersons([...persons, res.data])
 
-          setPersons((persons) => [...persons, res.data])
-          
           setfeedbackMessage(`Added ${newPerson.name}`)
           
           setshowFeedback(true)
@@ -113,9 +111,8 @@ const App = () => {
       personService
       .delete(id)
       .then(res => {
-        if (res.status === 200) {
-       
-          getPersons()
+        if (res.status === 204) {
+          persons.splice( persons.indexOf(currentItem), 1 )
        
         }
       })

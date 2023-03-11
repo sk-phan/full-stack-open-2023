@@ -65,7 +65,7 @@ app.get('/person/:id', (req,res) => {
     }
 })
 
-app.delete('/person/:id', (req, res) => {
+app.delete('/persons/:id', (req, res) => {
     const id = req.params.id
     phonebook = phonebook.filter(person => person.id !== +id);
     res.status(204).end()
