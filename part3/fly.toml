@@ -1,13 +1,12 @@
-# fly.toml file generated for suki-phonebook-app on 2023-03-12T13:08:02+02:00
+# fly.toml file generated for suki-project-phonebook on 2023-03-12T13:04:56+02:00
 
-app = "suki-phonebook-app"
+app = "suki-project-phonebook"
 kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "arn"
 processes = []
 
 [env]
-  PORT = "8080"
 
 [experimental]
   auto_rollback = true

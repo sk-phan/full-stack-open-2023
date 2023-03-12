@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/persons', (req, res) => {
-    res.tex
+    res.json(phonebook) 
 })
 
 app.get('/info', (req, res) => {
@@ -134,3 +134,8 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`) 
 })
+
+
+
+
+//To deploy

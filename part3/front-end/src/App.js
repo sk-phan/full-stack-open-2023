@@ -112,8 +112,10 @@ const App = () => {
       .delete(id)
       .then(res => {
         if (res.status === 204) {
-          persons.splice( persons.indexOf(currentItem), 1 )
-       
+          const list = [...persons]
+          list.splice( persons.indexOf(currentItem), 1 )
+
+          setPersons(list)
         }
       })
       .catch(error => console.log(error))
