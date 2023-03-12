@@ -3,11 +3,57 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const cors = require('cors');
+const mongoose = require('mongoose')
 
 app.use(express.json());
 app.use(express.static('build'))
 app.use(cors()) 
 
+if (process.argv.length < 3) {
+    console.log('give password as argument')
+    process.exit(1)
+}
+
+const password = process.argv[2]
+
+const url = 
+`mongodb+srv://sukiphan97:${password}@cluster0.adsgfwp.mongodb.net/?retryWrites=true&w=majority`
+
+mongoose.set('strictQuery', false)
+mongoose.connect(url)
+
+const phonebookSchema = new mongoose.Schema({
+    id: Number,
+    name: String,
+    number: Number
+})
+
+const Phonebook = mongoose.model('Phonebook', phonebookSchema)
+ 
+const phonebook = new Phonebook(
+    [
+       {
+           "id": 1,
+           "name": "Arto Hellas", 
+           "number": "040-123456"
+       },
+       { 
+           "id": 2,
+           "name": "Ada Lovelace", 
+           "number": "39-44-5323523"
+       },
+       { 
+           "id": 3,
+           "name": "Dan Abramov", 
+           "number": "12-43-234345"
+       },
+       { 
+           "id": 4,
+           "name": "Mary Poppendieck", 
+           "number": "39-23-6423122"
+       }
+   ] 
+)
 //Create custom token and log POST request
 morgan.token('postData', (req) => {
     if (req.method == 'POST') return '' +  JSON.stringify(req.body);
@@ -20,28 +66,7 @@ app.use(
       ':method :url :status :res[content-length] - :response-time ms :postData'
     )
   );
-  let phonebook = [
-    {
-        "id": 1,
-        "name": "Arto Hellas", 
-        "number": "040-123456"
-    },
-    { 
-        "id": 2,
-        "name": "Ada Lovelace", 
-        "number": "39-44-5323523"
-    },
-    { 
-        "id": 3,
-        "name": "Dan Abramov", 
-        "number": "12-43-234345"
-    },
-    { 
-        "id": 4,
-        "name": "Mary Poppendieck", 
-        "number": "39-23-6423122"
-    }
-] 
+
 
 
 app.get('/', (req, res) => {
