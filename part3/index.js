@@ -73,7 +73,7 @@ app.delete('/persons/:id', (req, res) => {
 //POST REQUEST
 app.post('/persons', async (req, res) => {
     const name = await req.body.name
-    const number = req.body.number
+    const number = await req.body.number
 
     const validName = phonebook.find(person => person.name == name)
 
@@ -100,6 +100,28 @@ app.post('/persons', async (req, res) => {
     }
   })
 
+app.put('/persons/:id', async (req, res) => {
+    const id = await req.params.id
+
+    const updatedItem = phonebook.findIndex(item => item.id === +id)
+
+    if (updatedItem !== -1) {
+      
+        phonebook[updatedItem] = {...req.body}
+       
+        res.json(updatedItem)
+    }
+    else {
+        res.status(404).json(
+            {
+                error: 'Can not find item in current list'
+            }
+        ).end()
+    }
+
+
+    
+})
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

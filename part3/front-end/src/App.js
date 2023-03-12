@@ -41,7 +41,7 @@ const App = () => {
     let validatePerson = persons.find(item => item.name === newName);
     
     if (validatePerson) {
-      const updateNumber =  window.confirm(`${newName} is already added to phonebook`)
+      const updateNumber =  window.confirm(`${newName} is already added to phonebook. Do you want to replace with current number?`)
 
       if (updateNumber) {
 
