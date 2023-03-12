@@ -43,8 +43,15 @@ app.use(
     }
 ] 
 
+
+app.get('/', (req, res) => {
+    res.json({
+        message: "Welcome to my page",
+    })
+})
+
 app.get('/persons', (req, res) => {
-    res.json(phonebook)
+    res.tex
 })
 
 app.get('/info', (req, res) => {
