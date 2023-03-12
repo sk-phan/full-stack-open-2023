@@ -28,6 +28,14 @@ const phonebookSchema = new mongoose.Schema({
     number: Number
 })
 
+phonebookSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
 const Phonebook = mongoose.model('Phonebook', phonebookSchema)
  
 const phonebook = new Phonebook(
@@ -76,7 +84,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/persons', (req, res) => {
-    res.json(phonebook) 
+    Phonebook.find().then(person => {
+        res.json(person) 
+    })
 })
 
 app.get('/info', (req, res) => {
